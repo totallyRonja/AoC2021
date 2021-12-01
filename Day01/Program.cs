@@ -3,6 +3,8 @@
 var input = File.ReadAllLines("./input.txt");
 var values = input.Select(str => int.Parse(str)).ToArray();
 
+Console.WriteLine("Day 01");
+Console.WriteLine("Part 1");
 //Part 1
 {
 	//I'm addicted to LINQ
@@ -22,6 +24,7 @@ var values = input.Select(str => int.Parse(str)).ToArray();
 }
 
 //Part 2
+Console.WriteLine("Part 2");
 {
 	//Ronja thinks she's smort and overcomplicates things
 	var increases = 0;
@@ -34,11 +37,18 @@ var values = input.Select(str => int.Parse(str)).ToArray();
 
 {
 	//one more LINQ solution as a treat
-	//tho here its definitely slower
 	var increases = values
 		.Zip(values.Skip(1), values.Skip(2))
 		.Select(window => window.First + window.Second + window.Third)
 		.Pair()
+		.Count(pair => pair.Second > pair.First);
+	Console.WriteLine(increases);
+}
+
+{
+	//oh wait I can do the windowless variant with Linq!!
+	var increases = values
+		.Zip(values.Skip(3))
 		.Count(pair => pair.Second > pair.First);
 	Console.WriteLine(increases);
 }
