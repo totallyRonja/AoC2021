@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="RonjasToolbox" Version="1.1.4" />
+      <PackageReference Include="RonjasToolbox" Version="1.2.1" />
     </ItemGroup>
 
 </Project>
