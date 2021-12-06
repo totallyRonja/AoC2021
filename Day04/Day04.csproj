@@ -9,12 +9,12 @@
 
     <ItemGroup>
       <None Update="input.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="RonjasToolbox" Version="1.3.0" />
+      <PackageReference Include="RonjasToolbox" Version="1.3.2" />
     </ItemGroup>
 
 </Project>
