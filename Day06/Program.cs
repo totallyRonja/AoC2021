@@ -1,53 +1,58 @@
-﻿using System.Diagnostics;
-using RonjasToolbox;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
-var input = File.ReadAllText("input.txt").Split(",")
-	.Select(int.Parse).ToArray();
+//BenchmarkRunner.Run<Stuff>();
 
-//ronja solution
-long fishCount = 0;
-var fishCache = new Dictionary<(int Time, int Age), long>();
+var stuff = new Stuff();
+stuff.Iterations = 80;
+var first = stuff.Recursion();
 
-//Part 1
-foreach (var fish in input) {
-	fishCount += CountFish(fish, 80);
-}
-Console.WriteLine(fishCount);
+stuff.Iterations = 256;
+var second = stuff.Recursion();
 
-//Part 2
-var watch = Stopwatch.StartNew();
-fishCount = 0;
-foreach (var fish in input) {
-	fishCount += CountFish(fish, 256);
-}
-Console.WriteLine($"Ronjas solution took: {watch.ElapsedTicks} ticks!");
-Console.WriteLine(fishCount);
+Console.WriteLine($"There are {first} fish after 80 iterations and {second} fish after 256 iterations");
 
-long CountFish(int age, int time) {
-	if (age >= time) return 1;
-	if (fishCache.TryGetValue((time, age), out var cachedCount)) return cachedCount;
-	var spawnAge = time - age - 1;
-	long count = CountFish(6, spawnAge) + CountFish(8, spawnAge);
-	fishCache.Add((time, age), count);
-	return count;
-}
-
-//bucket solution
-watch.Restart();
-long[] fishBuckets = new long[9];
-foreach(var fish in input) {
-	fishBuckets[fish]++;
-}
-
-foreach (int _ in 256) {
-	long first = fishBuckets[0];
-	foreach (long i in 1..9) {
-		fishBuckets[i - 1] = fishBuckets[i];
+public class Stuff { 
+	int[] input = File.ReadAllText("input.txt").Split(",").Select(int.Parse).ToArray();
+	
+	[Params(18, 80, 256)]
+	public int Iterations { get; set; }
+	
+	[Benchmark]
+	public long Recursion() {
+		var fishCache = new Dictionary<(int Time, int Age), long>();
+		long fishCount = 0;
+		foreach (var fish in input) {
+			fishCount += CountFish(fish, Iterations);
+		}
+		return fishCount;
+		
+		long CountFish(int age, int time) {
+			if (age >= time) return 1;
+			if (fishCache.TryGetValue((time, age), out var cachedCount)) return cachedCount;
+			var spawnAge = time - age - 1;
+			long count = CountFish(6, spawnAge) + CountFish(8, spawnAge);
+			fishCache.Add((time, age), count);
+			return count;
+		}
 	}
-	fishBuckets[6] += first;
-	fishBuckets[8] = first;
-}
 
-var sum = fishBuckets.Sum();
-Console.WriteLine($"The bucket solution took: {watch.ElapsedTicks} ticks!"); //slower??
-Console.WriteLine(sum);
+	[Benchmark]
+	public long Buckets() {
+		long[] fishBuckets = new long[9];
+		foreach(var fish in input) {
+			fishBuckets[fish]++;
+		}
+
+		for(int ii = 0; ii<256; ii++) {
+			long first = fishBuckets[0];
+			for(int i = 1; i < 9;i++) {
+				fishBuckets[i - 1] = fishBuckets[i];
+			}
+			fishBuckets[6] += first;
+			fishBuckets[8] = first;
+		}
+
+		return fishBuckets.Sum();
+	}
+}

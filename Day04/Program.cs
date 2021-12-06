@@ -1,5 +1,4 @@
 ﻿using RonjasToolbox;
-using static Helper;
 
 var input = File.ReadAllLines("input.txt");
 
@@ -53,29 +52,27 @@ foreach (int number in calledNumbers) {
 afterBingo1:
 int _;
 
-public static class Helper {
-	public static bool IsWinningBoard(ListView2d<sbyte> board) {
-		foreach (int row in 5) {
-			if (IsWinningLine(board, row * 5, 1)) return true;
-		}
-		foreach (int col in 5) {
-			if (IsWinningLine(board, col, 5)) return true;
-		}
-		return false;
+bool IsWinningBoard(ListView2d<sbyte> board) {
+	foreach (int row in 5) {
+		if (IsWinningLine(board, row * 5, 1)) return true;
 	}
+	foreach (int col in 5) {
+		if (IsWinningLine(board, col, 5)) return true;
+	}
+	return false;
+}
 	
-	public static bool IsWinningLine(ListView2d<sbyte> board, int start, int stride) {
-		foreach (int i in 5) {
-			if (board[start + stride * i] >= 0) return false;
-		}
-		return true;
+bool IsWinningLine(ListView2d<sbyte> board, int start, int stride) {
+	foreach (int i in 5) {
+		if (board[start + stride * i] >= 0) return false;
 	}
+	return true;
+}
 
-	public static int BoardScore(ListView2d<sbyte> winningBoard, int calledNumber) {
-		int sum = 0;
-		foreach (sbyte field in winningBoard) {
-			if (field > 0) sum += field;
-		}
-		return sum * calledNumber;
+ int BoardScore(ListView2d<sbyte> winningBoard, int calledNumber) {
+	int sum = 0;
+	foreach (sbyte field in winningBoard) {
+		if (field > 0) sum += field;
 	}
+	return sum * calledNumber;
 }

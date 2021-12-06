@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using RonjasToolbox;
-using static Helper;
 
 var input = File.ReadAllLines("input.txt");
 var lines = input.Where(line => !string.IsNullOrWhiteSpace(line))

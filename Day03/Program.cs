@@ -1,7 +1,5 @@
 ﻿using RonjasToolbox;
 
-using static Functions;
-
 var input = File.ReadAllLines("input.txt");
 
 var numbers = input.Select(input => Convert.ToInt16(input, 2)).ToArray();
@@ -22,7 +20,7 @@ foreach (var i in (0..12).Iter().Reverse()) {
 }
 var oxygenRating = numberMap.First();
 
-numberMap = new HashSet<short>(numbers);
+numberMap.Clear();
 foreach (var i in (0..12).Iter().Reverse()) {
 	var mostCommonBit = !MostCommonBit(numberMap, i);
 	numberMap.RemoveWhere(number => (((number >> i) & 1) == 1) != mostCommonBit);
@@ -33,10 +31,8 @@ var co2Scrubber = numberMap.First();
 Console.WriteLine($"oxygen: {oxygenRating} - scrubber: {co2Scrubber} - life support: {oxygenRating * co2Scrubber}");
 
 
-public static class Functions {
-	public static bool MostCommonBit(IEnumerable<short> numbers, int position) {
-		var trueBits = numbers.Count(num => ((num >> position) & 1) == 1);
-		var falseBits = numbers.Count() - trueBits;
-		return trueBits >= falseBits;
-	}
+bool MostCommonBit(IEnumerable<short> numbers, int position) {
+	var trueBits = numbers.Count(num => ((num >> position) & 1) == 1);
+	var falseBits = numbers.Count() - trueBits;
+	return trueBits >= falseBits;
 }
