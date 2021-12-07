@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using RonjasToolbox;
 
 //BenchmarkRunner.Run<Stuff>();
 
@@ -44,10 +45,10 @@ public class Stuff {
 			fishBuckets[fish]++;
 		}
 
-		for(int ii = 0; ii<256; ii++) {
+		foreach(int _ in 256) {
 			long first = fishBuckets[0];
-			for(int i = 1; i < 9;i++) {
-				fishBuckets[i - 1] = fishBuckets[i];
+			foreach(int i in 8) {
+				fishBuckets[i] = fishBuckets[i+1];
 			}
 			fishBuckets[6] += first;
 			fishBuckets[8] = first;
